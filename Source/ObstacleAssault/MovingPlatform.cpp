@@ -17,13 +17,28 @@ void AMovingPlatform::BeginPlay()
 	Super::BeginPlay();
 	StartLocation = GetActorLocation();
 	MaxDistanceSquared = MaxDistance * MaxDistance;
+
+	UE_LOG(LogTemp, Display, TEXT("StartLocation: %s"), *StartLocation.ToString());
 }
 
 // Called every frame
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    MovePlatform(DeltaTime);
+	RotatePlatform(DeltaTime);
+}
 
+void AMovingPlatform::RotatePlatform(float DeltaTime) 
+{
+	//FRotator CurrentRotation = GetActorRotation();
+	//CurrentRotation += RotationSpeed * DeltaTime;
+	//SetActorRotation(CurrentRotation);
+
+	AddActorLocalRotation(RotationSpeed * DeltaTime); // Prevents gimbal lock
+}
+void AMovingPlatform::MovePlatform(float DeltaTime)
+{
 	FVector CurrentLocation = GetActorLocation();
 
 	FVector Distance = CurrentLocation - StartLocation;
@@ -36,6 +51,5 @@ void AMovingPlatform::Tick(float DeltaTime)
 		SetActorLocation(StartLocation);
 		Speed *= -1;
 	}
-
 }
 
